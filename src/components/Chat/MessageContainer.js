@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Grid,
   Typography,
@@ -10,6 +10,8 @@ import {
   styled,
   TextField,
   Box,
+  Button,
+  Paper,
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import cover from "../../assets/chatbg.jpg";
@@ -38,9 +40,27 @@ const TextBox = styled("div")(({ theme }) => ({
   backgroundColor: "#1f1f1f",
 }));
 
-export const MessageContainer = () => {
+export const MessageContainer = ({ socket }) => {
   const user = useSelector((state) => state.auth.user);
-  let chat = [];
+  const [currentMessage, setCurrentMessage] = useState("");
+  const [message, setMessage] = useState();
+
+  const sendMessage = async () => {
+    if (currentMessage !== "") {
+      const messageData = {
+        room: "user1_user2",
+        author: "user1",
+        message: currentMessage,
+        time:
+          new Date(Date.now()).getHours() + new Date(Date.now()).getMinutes(),
+      };
+
+      await socket.emit("send_message", messageData);
+      setMessage((list) => [...list, message]);
+      setCurrentMessage("");
+    }
+  };
+
   return (
     <Container>
       <Grid
@@ -62,19 +82,37 @@ export const MessageContainer = () => {
           </Header>
         </Grid>
         <Grid item xs={8}>
-          <MessageBox></MessageBox>
+          <MessageBox>
+            <Paper
+              sx={{
+                backgroundColor: "#121212",
+                padding: 2,
+                margin: 2,
+                width: "50%",
+                wordBreak: "break-word",
+                overflowWrap: "break-word",
+              }}
+              elevation={3}
+            >
+              {currentMessage}
+            </Paper>
+          </MessageBox>
         </Grid>
         <Grid item xs={1}>
           <TextBox>
             <TextField
               id="outlined-basic"
               label="Type Your Message"
+              Z
               variant="outlined"
               fullWidth
+              onChange={(event) => setCurrentMessage(event.target.value)}
             />
-            <Avatar sx={{ margin: "0.5rem" }}>
-              <SendIcon />
-            </Avatar>
+            <Button onClick={sendMessage}>
+              <Avatar sx={{ margin: "0.5rem" }}>
+                <SendIcon />
+              </Avatar>
+            </Button>
           </TextBox>
         </Grid>
       </Grid>

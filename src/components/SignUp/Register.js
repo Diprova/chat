@@ -1,6 +1,7 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import Button from "@mui/material/Button";
 import { CustomTextField } from "../../global";
+import { useNavigate } from "react-router-dom";
 import {
   FormControlLabel,
   Checkbox,
@@ -17,6 +18,15 @@ import { register } from "../../reducers/redux/auth/auth.action";
 
 export const Register = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const register_data = useSelector((state) => state.auth.register_data);
+  
+  useEffect(() => {
+    if (register_data?.status) {
+      navigate("/login", { replace: true });
+    }
+  }, [register_data]);
+  
   return (
     <Container component="main" maxWidth="xs">
       <Box

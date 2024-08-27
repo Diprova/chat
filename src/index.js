@@ -15,12 +15,12 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <BrowserRouter history={history}>
-          <App />
-        </BrowserRouter>
-      </ThemeProvider>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <BrowserRouter history={history}>
+            <App />
+          </BrowserRouter>
+        </ThemeProvider>
     </PersistGate>
   </Provider>
 );

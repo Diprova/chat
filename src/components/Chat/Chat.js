@@ -15,10 +15,9 @@ import data from "../../data.json";
 import { setUser } from "../../reducers/redux/auth/auth.slice";
 import { useDispatch } from "react-redux";
 import { MessageContainer } from "./MessageContainer";
-import { Manager } from "socket.io-client";
+import { io } from "socket.io-client";
 
-const manager = new Manager("http://localhost:8080");
-const socket = manager.socket("/console/chat");
+const socket = io("http://localhost:8080");
 
 const Window = styled("div")(({ theme }) => ({
   padding: "0",
@@ -55,15 +54,14 @@ const ChatNotify = styled("div")(({ theme }) => ({
 export const Chat = () => {
   const [chatRoom, setChatRoom] = useState(false);
   const dispatch = useDispatch();
-  useEffect(() => {}, []);
 
   const startChat = (user) => {
     setChatRoom(true);
     dispatch(setUser(user.name));
     const chatRoom = "user1_user2";
-    console.log(socket, "-----socket------");
-    socket.emit("jonChat", chatRoom);
+    socket.emit("joinChat", chatRoom);
   };
+
   return (
     <Window>
       <PageWrapper>
@@ -117,7 +115,7 @@ export const Chat = () => {
           </Grid>
           <Grid item xs={9}>
             {chatRoom ? (
-              <MessageContainer />
+              <MessageContainer socket={socket} />
             ) : (
               <ChatWrapper>
                 <ChatNotify>
