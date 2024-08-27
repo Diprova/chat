@@ -2,9 +2,7 @@ const jwt = require("jsonwebtoken");
 
 async function verifyToken(req, res, next) {
   try {
-    // let Bearer_Token = req.headers.authorization.split(" ")[1];
-    let Bearer_Token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiNjY4YTYzZWY2NmFkNDQ1NTgzZWJiMjgyIiwiaWF0IjoxNzIyNjU4MTg5LCJleHAiOjE3MjI2NjE3ODl9.boaOA-RCv0B8IFUUJDnB3r7jXDHGw_AfJcuNRQ4ifUo";
+    let Bearer_Token = req.headers.authorization.split(" ")[1];
     let decoded_token = jwt.verify(Bearer_Token, process.env.JWT_ACCESS_SECRET);
     console.log(
       decoded_token.exp,

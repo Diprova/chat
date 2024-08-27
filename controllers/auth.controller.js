@@ -38,8 +38,11 @@ async function Login(req, res) {
     const pwd_match = bcrypt.compareSync(password, user.password);
     if (user === null || !pwd_match) res.status(401).json({ status: false, message: "Email or Password is Invalid" });
     const token=await GenerateAccessToken(user)
-    if (token) res.cookie('token', token.access_token, { maxAge:24 * 60 * 60 * 1000, httpOnly: true })
-    return res.json({status: true, message: "Login success",data:true});
+    if (token){
+      res.cookie('token', token.access_token, { maxAge:24 * 60 * 60 * 1000, httpOnly: true })
+      res.cookie('userId', user._id.toString(), { maxAge: 24 * 60 * 60 * 1000});
+    }
+    return res.json({status: true, message: "Login success", data:true});
   } catch (error) {
     return res.status(401).json({status: true, message: "login fail", data: false});
   }
